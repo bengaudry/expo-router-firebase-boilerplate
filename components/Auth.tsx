@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -7,11 +7,12 @@ import {
   View,
 } from "react-native";
 import { Link } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useAuth, useColors } from "@/hooks";
-import { Text, Title } from ".";
+import { useColors } from "@/hooks";
+import { Text, Title } from "./themed";
+import { LoadingOverlay } from "./LoadingOverlay";
+import Toast from "react-native-toast-message";
 
 export function AuthHeader({
   title,
@@ -30,8 +31,10 @@ export function AuthHeader({
         resizeMode="cover"
       />
 
-      <Title>{title}</Title>
-      <Title heading="subtitle">{subtitle}</Title>
+      <Title style={{ textAlign: "center" }}>{title}</Title>
+      <Title heading="subtitle" style={{ textAlign: "center", fontSize: 16 }}>
+        {subtitle}
+      </Title>
     </View>
   );
 }
@@ -71,8 +74,21 @@ export function AuthFooter({
   );
 }
 
-export function AuthWrapper({ children }: PropsWithChildren) {
-  const { loading } = useAuth();
+export function AuthWrapper({
+  children,
+  isLoading,
+  error,
+}: PropsWithChildren & { isLoading?: boolean; error?: string | null }) {
+  const { appBackground } = useColors();
+
+  useEffect(() => {
+    if (error) {
+      Toast.show({
+        text1: "Auth error",
+        text2: error,
+      });
+    }
+  }, [error]);
 
   return (
     <SafeAreaView
@@ -82,11 +98,12 @@ export function AuthWrapper({ children }: PropsWithChildren) {
         right: "additive",
         bottom: "off",
       }}
+      style={{ backgroundColor: appBackground }}
     >
-      <StatusBar style="dark" />
-      <View style={{ height: "100%" }}>
+      <LoadingOverlay visible={isLoading ?? false} />
+      <View style={{ height: "100%", backgroundColor: appBackground }}>
         <ScrollView
-          style={{ height: "100%" }}
+          style={{  }}
           contentContainerStyle={{ flexGrow: 1 }}
         >
           <KeyboardAvoidingView

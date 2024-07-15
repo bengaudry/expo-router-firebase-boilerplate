@@ -1,10 +1,14 @@
-import { SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  useColorScheme,
+} from "react-native";
 
 import { useAuth } from "@/hooks";
 import { Text, Title } from "@/components";
 
 export default function Home() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   return (
     <SafeAreaView>
@@ -16,11 +20,11 @@ export default function Home() {
           paddingVertical: 32,
         }}
       >
-        <Title heading="screen">Home</Title>
-        <Text>Welcome back {user?.displayName} !</Text>
-        <TouchableOpacity onPress={signOut}>
-          <Text>Sign out</Text>
-        </TouchableOpacity>
+        <Title heading="screen" style={{ marginBottom: 0 }}>
+          Home
+        </Title>
+        <Title heading="subtitle">Welcome back {user?.displayName} !</Title>
+        <Text>Color scheme : {useColorScheme()}</Text>
       </ScrollView>
     </SafeAreaView>
   );

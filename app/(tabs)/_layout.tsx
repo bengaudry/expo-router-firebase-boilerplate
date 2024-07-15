@@ -18,7 +18,6 @@ export default function TabsLayout() {
           tabBarIcon: ({ focused, ...props }) => (
             <Ionicons name={focused ? "home" : "home-outline"} {...props} />
           ),
-          
         }}
       />
       <Tabs.Screen
@@ -29,7 +28,6 @@ export default function TabsLayout() {
           tabBarIcon: ({ focused, ...props }) => (
             <Ionicons name={focused ? "person" : "person-outline"} {...props} />
           ),
-          
         }}
       />
     </Tabs>

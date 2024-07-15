@@ -6,21 +6,21 @@ import {
 } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCmoc2qszSbV_kCD6fbJxieNSks729p-jY",
-  authDomain: "trips-5bb9a.firebaseapp.com",
-  databaseURL:
-    "https://trips-5bb9a-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "trips-5bb9a",
-  storageBucket: "trips-5bb9a.appspot.com",
-  messagingSenderId: "396597471240",
-  appId: "1:396597471240:web:b816bf0f55a2cbe403c9bd",
-  measurementId: "G-J246X22GKK",
+export const FIREBASE_CONFIG = {
+  apiKey: process.env.EXPO_PUBLIC_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
+  databaseURL: process.env.EXPO_PUBLIC_DATABASE_URL,
+  projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_APP_ID,
+  measurementId: process.env.EXPO_PUBLIC_MEASUREMENT_ID,
 };
 
 export function getFirebaseApp() {
+  console.info(process.env.EXPO_PUBLIC_API_KEY);
   const apps = getApps();
-  return apps.length > 0 ? apps[0] : initializeApp(firebaseConfig);
+  return apps.length > 0 ? apps[0] : initializeApp(FIREBASE_CONFIG);
 }
 
 // AUTH

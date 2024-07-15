@@ -12,7 +12,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 
 import { useColors } from "@/hooks";
-import { Text } from "."
+import { Text } from "./Text";
 
 export function InputContainer({ style, ...props }: ViewProps) {
   return (
@@ -60,7 +60,7 @@ export function TextInput({
   inputStyle,
   ...props
 }: TextInputProps & { label: string; inputStyle?: StyleProp<TextStyle> }) {
-  const { secondaryTextColor, border, focusedBorder } =
+  const { secondaryTextColor, primaryTextColor, border, focusedBorder } =
     useColors();
 
   const [focused, setFocused] = useState(false);
@@ -94,7 +94,10 @@ export function TextInput({
             (secureTextEntry && !passVisible) || (passVisible && !focused)
           }
           style={[
-            { borderColor: focused ? focusedBorder : border },
+            {
+              borderColor: focused ? focusedBorder : border,
+              color: primaryTextColor,
+            },
             styles.Input,
             inputStyle,
           ]}

@@ -2,7 +2,7 @@
   "expo": {
     "scheme": "acme",
     "orientation": "portrait",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "auto",
     "infoPlist": {
       "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
       "UIViewControllerBasedStatusBarAppearance": true

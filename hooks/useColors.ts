@@ -6,8 +6,7 @@ import appColors, { type AppColors } from "@/constants/colors";
 export function useColors() {
   const scheme = useColorScheme();
 
-  const getColors = () =>
-    scheme === "dark" ? appColors.dark : appColors.light;
+  const getColors = () => appColors[scheme ?? "dark"];
 
   const [colors, setColors] = useState<AppColors>(getColors());
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
 
 import APP_INFO from "@/constants/appInfo";
 import { isEmailFormatCorrect } from "@/lib";
@@ -11,7 +10,10 @@ import {
   AuthFooter,
   AuthHeader,
   AuthWrapper,
+  Text,
 } from "@/components";
+import { useRouter } from "expo-router";
+import { useRegister } from "@/hooks/useRegister";
 
 export default function SignInPage() {
   const { push } = useRouter();
@@ -21,8 +23,17 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
+  const [register, loading, error] = useRegister();
+
+  const handleRegister = () => {
+    if (password !== passwordConfirm) return;
+    register(email, password, displayName, () => {
+      push("/check-email")
+    })
+  };
+
   return (
-    <AuthWrapper>
+    <AuthWrapper isLoading={loading} error={error}>
       <View style={styles.MainContainer}>
         <AuthHeader
           title={`Register to ${APP_INFO.name}`}
@@ -61,9 +72,7 @@ export default function SignInPage() {
         <CTA
           content="Register"
           style={styles.Cta}
-          onPress={() => {
-            push("/(tabs)/home")
-          }}
+          onPress={handleRegister}
           disabled={
             email.length === 0 ||
             !isEmailFormatCorrect(email) ||

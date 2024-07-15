@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  onIdTokenChanged,
-  signInWithEmailAndPassword,
-  User,
-} from "firebase/auth";
+import { onAuthStateChanged, onIdTokenChanged, type User } from "firebase/auth";
 
 import { getFirebaseAuth } from "@/firebase";
-import { isEmailFormatCorrect } from "@/lib";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -18,15 +13,6 @@ export const useAuth = () => {
     setLoading(false);
   };
 
-  const signIn = (email: string, password: string) => {
-    setLoading(true);
-    if (!isEmailFormatCorrect(email)) return;
-    signInWithEmailAndPassword(getFirebaseAuth(), email, password)
-      .then(({ user }) => handleUser(user))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  };
-
   const signOut = () => {
     setLoading(true);
     getFirebaseAuth()
@@ -36,10 +22,12 @@ export const useAuth = () => {
       .finally(() => setLoading(false));
   };
 
+  onAuthStateChanged(getFirebaseAuth(), setUser);
+
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(getFirebaseAuth(), handleUser);
     return () => unsubscribe();
   }, []);
 
-  return { user, loading, signIn, signOut };
+  return { user, loading, signOut };
 };

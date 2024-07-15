@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Link, useRouter } from "expo-router";
-import { signInWithEmailAndPassword } from "@firebase/auth";
 
 import { useColors } from "@/hooks";
 import APP_INFO from "@/constants/appInfo";
 import { isEmailFormatCorrect } from "@/lib";
-import { getFirebaseAuth } from "@/firebase";
 import {
   CTA,
   InputContainer,
@@ -15,32 +13,23 @@ import {
   AuthHeader,
   AuthWrapper,
 } from "@/components";
+import { useSignIn } from "@/hooks/useSignIn";
 
 export default function SignInPage() {
-  const { push } = useRouter();
+  const { replace } = useRouter();
   const { primaryTextColor } = useColors();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignin = async () => {
-    if (!isEmailFormatCorrect(email)) return;
-    try {
-      const res = await signInWithEmailAndPassword(
-        getFirebaseAuth(),
-        email,
-        password
-      );
-      console.info("Signed in user :", res.user);
-    } catch (err) {
-      console.error("Error while signin in :", err);
-    }
+  const [signin, loading, error] = useSignIn();
 
-    push("/home");
+  const handleSignin = async () => {
+    signin(email, password, () => replace("/home"));
   };
 
   return (
-    <AuthWrapper>
+    <AuthWrapper isLoading={loading} error={error}>
       <View style={styles.MainContainer}>
         <AuthHeader
           title={`Sign in to ${APP_INFO.name}`}
@@ -76,7 +65,7 @@ export default function SignInPage() {
         />
 
         <Link
-          href={"/register"}
+          href={"/forgotpass"}
           style={[{ color: primaryTextColor }, styles.ForgotPassLink]}
         >
           Forgot password ?

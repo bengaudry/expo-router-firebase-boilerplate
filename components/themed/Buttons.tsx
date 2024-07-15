@@ -9,6 +9,8 @@ import {
   TextStyle,
   ViewStyle,
   type StyleProp,
+  useColorScheme,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -31,6 +33,7 @@ export type CTAProps = TouchableOpacityProps & {
   textStyle?: StyleProp<TextStyle>;
   innerStyle?: StyleProp<ViewStyle>;
   gradientColors?: Array<string>;
+  loading?: boolean;
   type?: "default" | "success" | "info" | "warning" | "danger";
 };
 
@@ -43,12 +46,17 @@ export function CTA({
   textStyle,
   gradientColors,
   disabled,
+  loading,
   type = "default",
   ...props
 }: CTAProps) {
   const { shadow } = useColors();
+  const scheme = useColorScheme();
 
-  const defaultBgColors = ["rgba(72, 72, 72, 1)", "rgba(22, 22, 22, 1)"];
+  const defaultBgColors =
+    scheme === "dark"
+      ? ["rgba(240, 240, 240, 1)", "rgba(190, 190, 190, 1)"]
+      : ["rgba(72, 72, 72, 1)", "rgba(22, 22, 22, 1)"];
   const dangerBgColors = ["rgba(219, 43, 15, 1)", "rgba(173, 34, 12, 1)"];
   const warningBgColors = ["rgba(255, 193, 7, 1)", "rgba(204, 156, 14, 1)"];
   const infoBgColors = ["rgba(0, 123, 255, 1)", "rgba(0, 87, 181, 1)"];
@@ -62,24 +70,25 @@ export function CTA({
     if (type === "info") return setBgColors(infoBgColors);
     if (type === "success") return setBgColors(successBgColors);
     return setBgColors(gradientColors ?? defaultBgColors);
-  }, [type]);
+  }, [type, scheme]);
 
   return (
     <TouchableOpacity
       style={[
         styles.CtaTouchZone,
-        { shadowColor: shadow, shadowOpacity: disabled ? 0 : 0.3 },
+        {
+          shadowColor: shadow,
+          shadowOpacity: disabled ? 0 : 0.3,
+          opacity: disabled ? 0.2 : 1,
+        },
         style,
       ]}
-      disabled={disabled}
+      disabled={disabled || loading}
       {...props}
     >
-      <LinearGradient
-        style={[styles.CtaGradientBackground, { opacity: disabled ? 0.2 : 1 }]}
-        colors={bgColors}
-      />
+      <LinearGradient style={styles.CtaGradientBackground} colors={bgColors} />
       <View style={[styles.CtaLabelContainer, innerStyle]}>
-        <ButtonLabel>{content}</ButtonLabel>
+        {loading ? <ActivityIndicator /> : <ButtonLabel>{content}</ButtonLabel>}
       </View>
     </TouchableOpacity>
   );
